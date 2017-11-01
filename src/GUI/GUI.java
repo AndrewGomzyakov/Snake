@@ -1,30 +1,31 @@
-package GUI;
+﻿package GUI;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
-//import org.eclipse.swt.events.TouchEvent;
-//import org.eclipse.swt.events.TouchListener;
-//import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.events.TouchEvent;
+import org.eclipse.swt.events.TouchListener;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
-//import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
-//import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
-//import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Display;
-//import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.FileDialog;
-//import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 
-//import java.io.BufferedReader;
-//import java.io.IOException;
-//import java.io.InputStreamReader;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
 import SnakeCore.GameState;
+import SnakeCore.Saver;
 import SnakeCore.StateParser;
 //import java.util.Timer;
 //import java.util.TimerTask;
@@ -35,21 +36,19 @@ public class GUI {
 	private static GameState gameState;
 	private static Font font = new Font(display,"Arial",14,SWT.BOLD | SWT.ITALIC);
 	private static boolean flag = false;
-	private static Image hedgA = new Image(display, ".\\sprites\\hedgA.png");
-	private static Image hedgW = new Image(display,".\\sprites\\hedgW.png");
-	private static Image hedgD = new Image(display, ".\\sprites\\hedgD.png");
-	private static Image hedgS = new Image(display, ".\\sprites\\hedgS.png");
-	private static Image tel1 = new Image(display, ".\\sprites\\\\port1.png");
-	private static Image tel2 = new Image(display, ".\\sprites\\port2.png");
-	private static Image pil = new Image(display, ".\\sprites\\pil.png");
-	private static Image apple = new Image(display, ".\\sprites\\apple.gif");
+	private static Image hedgA = new Image(display, ".\\Snake\\sprites\\hedgA.png");
+	private static Image hedgW = new Image(display,".\\Snake\\sprites\\hedgW.png");
+	private static Image hedgD = new Image(display, ".\\Snake\\sprites\\hedgD.png");
+	private static Image hedgS = new Image(display, ".\\Snake\\sprites\\hedgS.png");
+	private static Image tel1 = new Image(display, ".\\Snake\\sprites\\\\port1.png");
+	private static Image tel2 = new Image(display, ".\\Snake\\sprites\\port2.png");
+	private static Image pil = new Image(display, ".\\Snake\\sprites\\pil.png");
+	private static Image apple = new Image(display, ".\\Snake\\sprites\\apple.gif");
 
 	
 	
-	private static final String[][] FILTERS = {{"Ôàéëû Word (*.docx)" , "*.docx"}, 
-            {"Ôàéëû Excel (*.xlsx)", "*.xlsx"},
-            {"Ôàéëû Adobe (*.pdf)" , "*.pdf" },
-            {"Âñå ôàéëû (*.*)"     , "*.*"  }};
+	private static final String[][] FILTERS = {
+            {"Все файлы (*.*)"     , "*.*"  }};
 
 	private static void setFilters(FileDialog dialog)
 	{
@@ -164,7 +163,7 @@ public class GUI {
 						}
 					}
 				
-				e.gc.drawText("Äëèíà çìåéêè:  " + gameState.getLenght(), 10, sqRez * (a.length));
+				e.gc.drawText("Длина змейки:  " + gameState.getLenght(), 10, sqRez * (a.length));
 				if (flag) {
 					e.gc.setBackground(shell.getDisplay().getSystemColor(SWT.COLOR_DARK_MAGENTA));
 					e.gc.drawText("Game over", 100, 100);
@@ -190,22 +189,25 @@ public class GUI {
 			 	 		runGame(canvas, ".\\Snake\\levels\\Simple.txt", gameTick);
 			 	 		break;
 			 	 	case(SWT.F2):
+			 	 		display.timerExec(-1, gameTick);
 			 	 		FileDialog dlg2 = new FileDialog(shell, SWT.SAVE);
 				 	 	setFilters(dlg2);
 				 	 	dlg2.open();
-				 	 	//String fname2 = dlg2.getFilterPath() + "\\" + dlg2.getFileName();
+				 	 	String fname2 = dlg2.getFilterPath() + "\\" + dlg2.getFileName();
+				 	 	Saver.save(fname2, gameState);
+				 	 	display.timerExec(500, gameTick);
 			 	 		break;
 					case(SWT.KEYPAD_4):
-						gameState.turnSnake(4);
+						gameState.TurnSnake(4);
 						break;
 					case(SWT.KEYPAD_6):
-						gameState.turnSnake(6);
+						gameState.TurnSnake(6);
 						break;
 					case(SWT.KEYPAD_2):
-						gameState.turnSnake(2);
+						gameState.TurnSnake(2);
 						break;
 					case(SWT.KEYPAD_8):
-						gameState.turnSnake(8);
+						gameState.TurnSnake(8);
 						break;
 				}
 					
@@ -216,7 +218,7 @@ public class GUI {
 		});
 		shell.open(); 
 		shell.setSize(600, 600);
-		runGame(canvas, ".\\levels\\Simple.txt", gameTick);
+		runGame(canvas, ".\\Snake\\levels\\Simple.txt", gameTick);
 
 		canvas.redraw();
 		
@@ -230,3 +232,4 @@ public class GUI {
 	 }
 	 
 }
+
