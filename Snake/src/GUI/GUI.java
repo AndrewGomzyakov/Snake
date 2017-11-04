@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 import SnakeCore.GameState;
+import SnakeCore.Saver;
 import SnakeCore.StateParser;
 //import java.util.Timer;
 //import java.util.TimerTask;
@@ -46,9 +47,7 @@ public class GUI {
 
 	
 	
-	private static final String[][] FILTERS = {{"װאיכû Word (*.docx)" , "*.docx"}, 
-            {"װאיכû Excel (*.xlsx)", "*.xlsx"},
-            {"װאיכû Adobe (*.pdf)" , "*.pdf" },
+	private static final String[][] FILTERS = {
             {"ֲסו פאיכû (*.*)"     , "*.*"  }};
 
 	private static void setFilters(FileDialog dialog)
@@ -190,10 +189,13 @@ public class GUI {
 			 	 		runGame(canvas, ".\\Snake\\levels\\Simple.txt", gameTick);
 			 	 		break;
 			 	 	case(SWT.F2):
+			 	 		display.timerExec(-1, gameTick);
 			 	 		FileDialog dlg2 = new FileDialog(shell, SWT.SAVE);
 				 	 	setFilters(dlg2);
 				 	 	dlg2.open();
 				 	 	String fname2 = dlg2.getFilterPath() + "\\" + dlg2.getFileName();
+				 	 	Saver.save(fname2, gameState);
+				 	 	display.timerExec(500, gameTick);
 			 	 		break;
 					case(SWT.KEYPAD_4):
 						gameState.TurnSnake(4);
